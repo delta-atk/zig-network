@@ -1,6 +1,8 @@
 const std = @import("std");
 const network = @import("network");
 
+const is_windows = @import("builtin").os.tag == .windows;
+
 // Multicast UDP example
 // listens on 224.0.0.1 (all machines on subnet) on port 9999
 
@@ -25,7 +27,7 @@ pub fn main() !void {
     // of this program can all subscribe to the UDP broadcasts
     try sock.enablePortReuse(true);
     const incoming_endpoint = network.EndPoint{
-        .address = network.Address{ .ipv4 = network.Address.IPv4.multicast_all },
+        .address = network.Address{ .ipv4 = if (is_windows) .any else .multicast_all },
         .port = 9999,
     };
     sock.bind(incoming_endpoint) catch |err| {

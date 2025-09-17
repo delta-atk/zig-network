@@ -896,8 +896,8 @@ pub const Socket = struct {
             .imr_ifindex = 0, // this cannot be crossplatform, so we set it to zero
         };
 
-        const IP_ADD_MEMBERSHIP = if (is_windows) 5 else if (is_bsd) 12 else 35;
-        const level = if (is_bsd) std.posix.IPPROTO.IP else std.posix.SOL.SOCKET;
+        const IP_ADD_MEMBERSHIP = if (is_windows or is_bsd) 12 else 35;
+        const level = if (is_windows or is_bsd) std.posix.IPPROTO.IP else std.posix.SOL.SOCKET;
 
         try std.posix.setsockopt(
             self.internal,
